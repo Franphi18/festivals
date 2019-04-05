@@ -9,7 +9,7 @@ var b = {
 };
 
 // Mapping of step names to colors.
-var colors = {
+var colorsByFestival = {
   "Lowlands": "#EF2C5B",
     "Lowlands": "#EF2C5B",
   "Pinkpop": "#4EC9CE",
@@ -50,9 +50,10 @@ var arc = d3.arc()
 
 // Use d3.text and d3.csvParseRows so that we do not need to have a header
 // row, and can receive the csv as an array of arrays.
-d3.text("data.csv", function(text) {
-  var csv = d3.csvParseRows(text);
-  var json = buildHierarchy(csv);
+d3.text("data2.csv", function(text) {
+  var dsv = d3.dsvFormat(';');
+  var csv = dsv.parseRows(text);
+  var json = csvToData(csv);
     console.log(json);
     
   createVisualization(json);
@@ -93,11 +94,7 @@ function createVisualization(json) {
       .attr("d", arc)
       .attr("fill-rule", "evenodd")
       .style("fill", function(d) {
-        while(d.depth > 1) {
-            d = d.parent;
-        }
-          
-          return colors[d.data.name];
+        return d.color;
       })
        .style("opacity", 1)
       .on("mouseover", mouseover);
@@ -207,7 +204,7 @@ function updateBreadcrumbs(nodeArray, percentageString) {
 
   entering.append("svg:polygon")
       .attr("points", breadcrumbPoints)
-      .style("fill", function(d) { return colors[d.data.name]; });
+      .style("fill", function(d) { return d.color; });
 
   entering.append("svg:text")
       .attr("x", (b.w + b.t) / 2)
@@ -244,10 +241,10 @@ function drawLegend() {
 
   var legend = d3.select("#legend").append("svg:svg")
       .attr("width", li.w)
-      .attr("height", d3.keys(colors).length * (li.h + li.s));
+      .attr("height", d3.keys(colorsByFestival).length * (li.h + li.s));
 
   var g = legend.selectAll("g")
-      .data(d3.entries(colors))
+      .data(d3.entries(colorsByFestival))
       .enter().append("svg:g")
       .attr("transform", function(d, i) {
               return "translate(0," + i * (li.h + li.s) + ")";
@@ -284,44 +281,73 @@ function toggleLegend() {
 
 var data = [];
 
-function buildHierarchy(csv) {
-  var root = {"name": "root", "children": []};
-  for (var i = 0; i < csv.length; i++) {
-      
-    var sequence = csv[i][0];
-    var size = +csv[i][1];
-    if (isNaN(size)) { // e.g. if this is a header row
-      continue;
-    }
-    var parts = sequence.split("-");
-    var currentNode = root;
-    for (var j = 0; j < parts.length; j++) {
-      var children = currentNode["children"];
-      var nodeName = parts[j];
-      var childNode;
-      if (j + 1 < parts.length) {
-   // Not yet at the end of the sequence; move down the tree.
- 	var foundChild = false;
- 	for (var k = 0; k < children.length; k++) {
- 	  if (children[k]["name"] == nodeName) {
- 	    childNode = children[k];
- 	    foundChild = true;
- 	    break;
- 	  }
- 	}
+function csvToData(csv) {
+  console.log(csv);
 
-  // If we don't already have a child node for this branch, create it.
- 	if (!foundChild) {
- 	  childNode = {"name": nodeName, "children": []};
- 	  children.push(childNode);
- 	}
- 	currentNode = childNode;
-      } else {
- 	// Reached the end of the sequence; create a leaf node.
- 	childNode = {"name": nodeName, "size": size};
- 	children.push(childNode);
-      }
+  // Todo: is een eenvoudigere datastructuur mogelijk?
+  var data = { name: "root", children: [] };
+
+  for (var i = 0; i < csv.length; i++) {
+    // One .csv row
+    var row = csv[i];
+
+    // Named values in the row
+    var festival = row[0];
+    var artist = row[1];
+    var person = row[2];
+    var year = row[3];
+    var description = row[4];
+
+    // Determine the color
+    var festivalColor = colorsByFestival[festival];
+
+    // Todo: code beneden is nu niet "dynamisch".
+    //  Niveau extra/dieper niet mogelijk zonder extra code
+    //  Wel eenvoudiger te begrijpen zo.
+
+    // Check if there already is an entry for the festival
+    var festivalEntry = data.children.find(function(entry) {
+      return entry.name === festival;
+    });
+
+    // No festival entry yet, create one.
+    if (!festivalEntry) {
+      festivalEntry = {
+        name: festival,
+        color: festivalColor,
+        children: []
+      };
+
+      data.children.push(festivalEntry);
+    }
+
+    // Check if there already is an entry for the artist
+    var artistEntry = festivalEntry.children.find(function(entry) {
+      return entry.name === artist;
+    });
+    if (!artistEntry) {
+      artistEntry = {
+        name: artist,
+        color: festivalColor,
+        children: []
+      };
+
+      festivalEntry.children.push(artistEntry);
+    }
+
+    // Check if there already is an entry for the person
+    var personEntry = artistEntry.children.find(function(entry) {
+      return entry.name === artist;
+    });
+    if (!personEntry) {
+      artistEntry.children.push({
+        name: person,
+        color: festivalColor,
+        year: year,
+        description: description
+      });
     }
   }
-  return root;
-};
+
+  return data;
+}
