@@ -11,16 +11,30 @@ var b = {
 // Mapping of step names to colors.
 var colorsByFestival = {
   "Lowlands": "#EF2C5B",
-    "Lowlands": "#EF2C5B",
   "Pinkpop": "#4EC9CE",
   "Rock Werchter (inclusief Torhout)": "#D9E021",
   "Sziget": "#528485",
   "Pukkelpop": "#7DA3A4",
   "Best kept secret": "#471F46",
-    "Concert at Sea": "#AE69BF",
-    "Down the Rabbit Hole": "#B896C3",
-    "Appelsap": "#232342",
-     "Awakenings": "#232342", "Bevrijdingsfestival": "#232342", "Cactusfestival Brugge": "#232342", "Eurosonic Noorderslag": "#232342", "Fields of Rock": "#232342", "Forta Rock XL": "#232342","Freshtival": "#232342","Glastonbury": "#232342","Mysteryland": "#232342","Nieuw Zaailand": "#232342","Paaspop": "#232342","Parkcity Live": "#232342","Parkfeest": "#232342","Parkpop": "#232342","Trailerpop": "#232342","Zwarte Cross": "#232342",
+  "Concert at Sea": "#AE69BF",
+  "Down the Rabbit Hole": "#B896C3",
+  "Appelsap": "#232342",
+  "Awakenings": "#232342", 
+  "Bevrijdingsfestival": "#232342", 
+  "Cactusfestival Brugge": "#232342", 
+  "Eurosonic Noorderslag": "#232342", 
+  "Fields of Rock": "#232342", 
+  "Forta Rock XL": "#232342",
+  "Freshtival": "#232342",
+  "Glastonbury": "#232342",
+  "Mysteryland": "#232342",
+  "Nieuw Zaailand": "#232342",
+  "Paaspop": "#232342",
+  "Parkcity Live": "#232342",
+  "Parkfeest": "#232342",
+  "Parkpop": "#232342",
+  "Trailerpop": "#232342",
+  "Zwarte Cross": "#232342",
     
 };
 
@@ -50,13 +64,14 @@ var arc = d3.arc()
 
 // Use d3.text and d3.csvParseRows so that we do not need to have a header
 // row, and can receive the csv as an array of arrays.
-d3.text("data2.csv", function(text) {
+//met de console kan je zien dat dit niet goed gaat, de file wordt niet gesplitst op de ;
+
+  d3.text("data2.csv").then(function(text) {
   var dsv = d3.dsvFormat(';');
-  var csv = dsv.parseRows(text);
+  var csv = dsv.parseRows(text); 
   var json = csvToData(csv);
-    console.log(json);
-    
-  createVisualization(json);
+
+createVisualization(json);
 });
 
 // Main function to draw and set up the visualization, once we have the data.
@@ -70,21 +85,19 @@ function createVisualization(json) {
   // Bounding circle underneath the sunburst, to make it easier to detect
   // when the mouse leaves the parent g.
   vis.append("svg:circle")
-      .attr("r", radius)
-      .style("opacity", 0);
+    .attr("r", radius)
+    .style("opacity", 0);
 
   // Turn the data into a d3 hierarchy and calculate the sums.
   var root = d3.hierarchy(json)
-      .sum(function(d) { return d.size; })
-      .sort(function(a, b) { return b.value - a.value; });
+    .sum(function(d) { return d.size; })
+    .sort(function(a, b) { return b.value - a.value; });
   
   // For efficiency, filter nodes to keep only those large enough to see.
   var nodes = partition(root).descendants()
-      .filter(function(d) {
-          return (d.x1 - d.x0 > 0.005); // 0.005 radians = 0.29 degrees
-
+    .filter(function(d) {
+       return (d.x1 - d.x0 > 0.005); // 0.005 radians = 0.29 degrees
       })
-  
   ;
 
   var path = vis.data([json]).selectAll("path")
@@ -274,10 +287,7 @@ function toggleLegend() {
   }
 }
 
-// Take a 2-column CSV and transform it into a hierarchical structure suitable
-// for a partition layout. The first column is a sequence of step names, from
-// root to leaf, separated by hyphens. The second column is a count of how 
-// often that sequence occurred.
+// data setup
 
 var data = [];
 
@@ -317,7 +327,7 @@ function csvToData(csv) {
         color: festivalColor,
         children: []
       };
-
+      
       data.children.push(festivalEntry);
     }
 
@@ -348,6 +358,5 @@ function csvToData(csv) {
       });
     }
   }
-
   return data;
 }
