@@ -66,10 +66,15 @@ var arc = d3.arc()
 // row, and can receive the csv as an array of arrays.
 //met de console kan je zien dat dit niet goed gaat, de file wordt niet gesplitst op de ;
 
+//load the data file
   d3.text("data2.csv").then(function(text) {
-  var dsv = d3.dsvFormat(';');
-  var csv = dsv.parseRows(text); 
-  var json = csvToData(csv);
+    //create a semicolon parser
+    var dsv = d3.dsvFormat(';');
+    //use semicolon parser on loaded data file
+    var csv = dsv.parse(text); 
+    //build Json Hierarchy, see function below
+    var json = csvToData(csv);
+    console.log(json);
 
 createVisualization(json);
 });
@@ -100,6 +105,8 @@ function createVisualization(json) {
       })
   ;
 
+  //tekent een pad op basis van de data
+  console.log(json);
   var path = vis.data([json]).selectAll("path")
       .data(nodes)
       .enter().append("svg:path")
@@ -292,10 +299,14 @@ function toggleLegend() {
 var data = [];
 
 function csvToData(csv) {
-  console.log(csv);
 
+
+  var csvByFestival = d3.nest()
+  .key(function(d) { return d.festival; })
+  .entries(csv);
+  console.log(csvByFestival);
   // Todo: is een eenvoudigere datastructuur mogelijk?
-  var data = { name: "root", children: [] };
+  //var data = { festival: "root", children: [] };
 
   for (var i = 0; i < csv.length; i++) {
     // One .csv row
