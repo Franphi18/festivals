@@ -1,0 +1,160 @@
+body {
+	font-size: 14px;
+	font-family: 'Lato', sans-serif;
+}
+
+a, a:link, a:visited, a:active {
+  color: #FF2E88;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+  border-bottom: 1px solid #FF2E88;
+}
+
+a.image-link {
+	border-bottom: none;
+}
+
+.mobile {
+	display: none;
+}
+
+.outer-margin {
+	margin-left: 50px;
+	margin-right: 50px;
+}
+
+
+/*---background chart---*/
+#chart {
+	background-image: url(../img/background2.svg);
+	background-repeat: no-repeat;
+	background-size:1200px;
+	margin-left:50px;	
+}
+
+/* --- Intro --- */
+
+#intro {
+	margin-top: 25px;
+}
+
+#intro h1 {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 700;
+	font-size: 3em;
+	margin-bottom: 5px;
+}
+
+#intro .dot {
+	color: #ADDFE0;
+	font-size: 1.1em;
+}
+
+
+#intro p {
+	margin-top: 0px;
+	max-width: 800px;
+	line-height: 160%
+}
+
+/* --- Chart --- */
+
+.axis path, .axis .tick line {
+	display: none;
+}
+
+.axis text {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 16px;
+	font-weight: 700;
+	fill: #7F7F7F;
+	cursor: default;
+}
+
+.legend-title {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 14px;
+}
+.festival-size {
+	fill: #191919;
+}
+.festival-legend-value {
+	font-family: 'Montserrat', sans-serif;
+	text-anchor: middle;
+}
+
+
+
+/* --- Tooltip --- */
+
+.tooltip-wrapper {
+	pointer-events: none;
+	text-anchor: middle;
+	text-shadow: 0 1px 3px white, 1px 0 3px white, -1px 0 3px white, 0 -1px 3px white;
+}
+
+.tooltip-background {
+	fill: #ededed;
+	opacity: 0.9;
+}
+
+.tooltip-festival {
+	font-family: 'Roboto', sans-serif;
+	font-size: 12px;
+}
+
+.tooltip-artiest {
+	font-size: 23px;
+}
+
+.tooltip-naam {
+	font-size: 12px;
+	font-style: italic;
+	margin-bottom: 20px;
+}
+
+.tooltip-ervaring {
+	font-size: 11px;
+}
+
+/* --- Credits --- */
+
+#credit {
+	padding-bottom: 25px;
+}
+
+#credit p {
+	margin-top: 0px;
+	margin-bottom: 3px;
+}
+
+.credit-bold {
+	font-weight: 600;
+	font-size: 0.9em;
+}
+
+.credit-divider {
+	color: #b7b7b7;
+	font-weight: 600;
+	font-size: 0.9em;
+	padding: 0px 5px;
+}
+
+.credit-note {
+	line-height: 140%;
+	font-size: 0.8em;
+	font-weight: 400;
+	/*color: #656565;*/
+}
+
+.credit-data-note {
+	max-width: 600px;
+	margin-top: 20px !important;
+	line-height: 170%;
+	font-size: 0.7em;
+	font-weight: 400;
+	color: #9B9B9B;	
+}
