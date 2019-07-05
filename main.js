@@ -89,8 +89,6 @@ if(isMobile) {
 
 
 
-
-
 		
 		///////////////////////////////////////////////////////////////////////////
 		//////////////////////////// Draw the circles /////////////////////////////
@@ -125,11 +123,11 @@ if(isMobile) {
 		      	
 		      	tooltipBackground
 		      		.transition().duration(100)
-		      		.attr("x", -0.5 * maxSize*1.2)
-		      		.attr("width", maxSize*1.2)
+		      		.attr("x", 690)
+		      		.attr("width", 380)
+					.attr("height",maxSize)
 		      	tooltipWrapper
-		      		.transition().duration(200)
-		        	.attr("transform", "translate(" + d.x + "," + (d.y + 40) + ")")
+					.transition().duration(200)
 		        	.style("opacity", 1);
 		  	})
 		  	.on("mouseout", function(d) {
@@ -165,44 +163,78 @@ if(isMobile) {
 		///////////////////////////////////////////////////////////////////////////
 
 		var tooltipWrapper = svg.append("g")
-		  .attr("class", "tooltip-wrapper")
-		 .attr("transform", "translate(" + 0 + "," + 0 + ")")
-		 .style("opacity", 0);
+		  .attr("class", "tooltip-wrapper") 
+		
+			.style("opacity", 0);
 
 		var tooltipBackground = tooltipWrapper.append("rect")
 			.attr("class", "tooltip-background")
-			.attr("x", 0)
-			.attr("y", -28)
+			.attr("y", 380)
 			.attr("width", 0)
 			.attr("height", 100);
 
 		var tooltipArtiest = tooltipWrapper.append("text")
 		  .attr("class", "tooltip-artiest")
 		  .attr("id", "tooltipArtiest")
-		  .attr("y", -4)
+			.attr("x",880)
+		  .attr("y", 410)
 		  .text("");
 
 		var tooltipFestival = tooltipWrapper.append("text")
 		  .attr("class", "tooltip-festival")
 		  .attr("id", "tooltipFestival")
-		  .attr("y", 17)
+			.attr("x",880) 
+			.attr("y", 430)
 		  .text("");
 
 		var tooltipNaam = tooltipWrapper.append("text")
 		  .attr("class", "tooltip-naam")
 		  .attr("id", "tooltipNaam")
-		  .attr("y", 40)
+			.attr("x",880)
+		  .attr("y", 460)
 		  .text("");
 		
 		var tooltipErvaring = tooltipWrapper.append("text")
 		  .attr("class", "tooltip-ervaring")
 		  .attr("id", "tooltipErvaring")
-		  .attr("y", 55)
-		  .text("");
+			.attr("x",880)
+			.attr("y", 480)
+			.attr("width", 100)
+		  	.text("")
+
 		
 			///////////////////////////////////////////////////////////////////////////
 		//////////////////////////// Add size legend //////////////////////////////
 		///////////////////////////////////////////////////////////////////////////
+		
+		///////////////////////////////////////////////////////////////////////////
+		//////////////////////////// wrap text function /////////////////////////////
+		///////////////////////////////////////////////////////////////////////////
+
+		function wrap(text, width) {
+  text.each(function() {
+    let text = d3.select(this),
+      words = text.text().split(/\s+/).reverse(),
+      word,
+      line = [],
+      lineNumber = 0,
+      lineHeight = 1.1, // ems
+      x = text.attr("x"),
+      y = text.attr("y"),
+      dy = 1.1,
+      tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+    while (word = words.pop()) {
+      line.push(word);
+      tspan.text(line.join(" "));
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop();
+        tspan.text(line.join(" "));
+        line = [word];
+        tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+      }
+    }
+  });
+}
 
 		
 	///////////////////////////////////////////////////////////////////////////
