@@ -1,36 +1,55 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Festival Ervaringen</title>
-    <script src="http://d3js.org/d3.v5.min.js" charset="utf-8"></script>
-    <link rel="stylesheet" type="text/css"
-      href="https://fonts.googleapis.com/css?family=Open+Sans:400,600">
-    <link rel="stylesheet" type="text/css" href="sequences.css"/>
-  </head>
-  <body>
-    <div id="main">
-      <div> <h2>Mijn ultieme </h2><h1> festival ervaring</h1></div>
-      <div id="sequence"></div>
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <!-- <meta name="viewport" content="user-scalable = yes"> -->
+
+	    <title>We ❤ festivals</title>
+	    <meta name="author" content="Hilje de Boer">
+	    <meta name="description" content="We love festivals - ultieme festival ervaring - Visual Logic - Hilje">
+	    <meta name="keywords" content="data, visualization, visualisation, data visualization, data visualisation, information, information visualization, information visualisation, dataviz, datavis, infoviz, infovis, data art">
+		
+		<!-- Styling -->
+		<link href="css/style.css" rel="stylesheet">
+
+		<!-- Google fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Lato:400,700|Montserrat:400,700|Roboto:400,700" rel="stylesheet">
+		
+		<!-- JavaScript files -->
+		<script src="https://d3js.org/d3.v5.min.js"></script>
+	
+	</head>
+	<body>
+		<div id="intro" class="outer-margin">
+			<h1 class="title">Het ultieme festival moment</h1>
+			<p>In de zomer van 2018 vroeg ik mensen om hun  <a style="color: #FF2E88; font-weight: 700;" href="https://www.visuallogic.nl/Dataviz/">ultieme festival ervaring</a> te delen. Hieronder de resultaten in een visualisatie.<sup>*</sup> </p>
+			<p class="desktop">Elke <span class="dot">⬤ </span> is een stem.<br> 'Hover' over de stemmen voor meer informatie over deze ultieme festival ervaringen. Check mijn blog voor meer details en de 'making off'</p>
+			<p class="mobile">Elke <span class="dot">⬤ </span> is een stem.<br> 'Hover' over de stemmen voor meer informatie over deze ultieme festival ervaringen. Check mijn blog voor meer details en de 'making off'</p>
+			<p class="mobile">Deze pagina werkt het beste op je desktop!</p>
+		</div>
+
+		<!-- Chart (or image for mobile) -->
+		<div class="mobile" style="margin-bottom: 20px;">
+			<a class="image-link" href="img/UltiemeFestivalMoment.png"><img alt="Het ultieme festival moment" src="img/UltiemeFestivalMoment.png" width="100%"></a>
+		</div>
+
+
+		<div id="chart"></div>
+
+		<!-- Credits & Data -->
+		<div id="credit" class="outer-margin">
+			<p class="credit-bold" style="margin-bottom: 8px;">Gemaakt door <a href="https://twitter.com/HiljedeBoer" target="_new">Hilje de Boer</a> <span class="credit-divider">|</span> <a href="http://www.visuallogic.nl/" target="_new">Visual Logic</a></p>
+			<p class="credit-data-note desktop">* Dit was geen dubbelblind, gerandomiseerd en placebo gecontroleerd onderzoek &#9786. Je kan dus ook niet echt conclusies verbinden aan dit initatief. Zie het als een verzameling ultieme ervaringen. De meeste stemmen zijn verzameld via mijn site www.mijnfestivalervaring.nl, aangevuld met ervaringen uit de uitzending van <a href="https://www.npo3fm.nl/events/387951-stem-nu-op-de-3fm-festival-top-1000" target="_new" style="color:#9B9B9B;">de festival top 999 van radio 3FM</a></p>
+		</div>
+
+		</div>
+        <script src="js/main.js"></script>	
         
-      <div id="chart">
-        <div id="explanation" style="visibility: hidden;">
-        The Ultimate festival for
-            <span id="percentage"></span><br/>
-            of the people
-          
-        </div>
-      </div>
-        
-    </div>
-    <div id="sidebar">
-      <input type="checkbox" id="togglelegend"> Legend<br/>
-      <div id="legend" style="visibility: hidden;"></div>
-    </div>
-    <script type="text/javascript" src="sequences.js"></script>
-    <script type="text/javascript">
-      // Hack to make this example display correctly in an iframe on bl.ocks.org
-      d3.select(self.frameElement).style("height", "700px");
-  </script> 
-  </body>
+        <!-- Google analytics -->
+        <script>
+		
+		
+        </script>
+	</body>
 </html>
