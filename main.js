@@ -19,7 +19,7 @@ if(isMobile) {
 	};
 	var widthOriginal = 2150 - 100 - 150;
 	var width = 1700 - margin.left - margin.right;
-	var height = 620 - margin.top - margin.bottom;
+	var height = 1000 - margin.top - margin.bottom;
 		
 	//SVG container
 	var svg = d3.select('#chart')
@@ -52,20 +52,24 @@ if(isMobile) {
 	///////////////////////// Select most voted Artists //////////////////////////
 	///////////////////////////////////////////////////////////////////////////
 			
-	var vijfStemmen = [
-		5, //Foofighters? hoe selecteer ik dat
-		4, 
-		
+	var interestingSongs = [
+		1989, //Oldest song - Billy Holiday
+		363, //Highest song from 2016 - Can't Stop The Feeling | Justin Timberlake
+		270, //Highest new song - Starman | David Bowie
+		144, //Highest riser - When We Were Young | Adele
+		232, //Pokemon song
+	];
+    
+    var PR = [
+		1,2,3,51,52 //Prodigy
 	];
 
-	//David Bowie festivals
-	var vierStemmen = [7,38,87,162,182,230,270,310,379,462,472,491,523,540,576,586,612,616,778,856,961,1144,1203,1632,1736,1875];
+	var FF = [6,7,41,42,81]; //foo fighters
 
-	//Prince festivals
-	var PR = [13,207,254,354,404,585,640,702,721,937,1268,1365,1378,1409,1658,1761,1771];
+	var MS = [10,11,85,104]; //Muford & Son
 
-	var strokeWidthColored = 3,	//The Beatles, Prince and David Bowie
-		strokeWidthRed = 4;		//Interesting festivals
+	var strokeWidthColored = 15,	//top 3 artiesten
+		strokeWidthRed = 15;		//Interesante verhalen?
 		
 	///////////////////////////////////////////////////////////////////////////
 	//////////////////////////// Read in the data /////////////////////////////
@@ -105,15 +109,23 @@ if(isMobile) {
 		  	.attr("class", "festival-group")
 		  	.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
 		  	.on("mouseover", function(d) { 
-		  		
+		  
+            document.getElementById('ervaringwrap').style.opacity=0.9;
+            document.getElementById('artiest').innerHTML = d.artiest
+            document.getElementById('festival').innerHTML = d.festival
+            document.getElementById('jaar').innerHTML = d.jaar
+            document.getElementById('naam').innerHTML = d.naam
+            document.getElementById('ervaring').innerHTML = d.ervaring
+                
+                //smooth effects
+                tooltipBackground
+		      		.transition().duration(100)
+		      	tooltipWrapper
+					.transition().duration(200)
+		        	.style("opacity", 1);
 				//console.log(d.festival, d.artiest, d.naam, d.jaar, d.ervaring); 
 
-		  		//Move the tooltip to the right location
-		  		tooltipFestival.text(d.festival+ " | " + d.jaar);
-		      	tooltipArtiest.text(d.artiest);
-				tooltipErvaring.text(d.ervaring);
-				tooltipNaam.text("Ingezonden door: " + d.naam);
-
+		  		
 
 				//Find the largest title
 				var maxSize = Math.max(document.getElementById("tooltipFestival").getComputedTextLength(), 
@@ -121,24 +133,49 @@ if(isMobile) {
 		      		document.getElementById("tooltipNaam").getComputedTextLength(),
 		      		document.getElementById("tooltipErvaring").getComputedTextLength());
 		      	
-		      	tooltipBackground
-		      		.transition().duration(100)
-		      		.attr("x", 690)
-		      		.attr("width", 380)
-					.attr("height",maxSize)
-		      	tooltipWrapper
-					.transition().duration(200)
-		        	.style("opacity", 1);
+		      	getElementById('ervaringwrap').style.height='maxSize';
+                
+                
 		  	})
 		  	.on("mouseout", function(d) {
 		  		//Hide the tooltip
 				
-				tooltipWrapper
+				            
+            document.getElementById('ervaringwrap').style.opacity=0;
+
+                
+                tooltipWrapper
 					.transition().duration(200)
 					.style("opacity", 0);
 		  	});
 
-	//document body append div -> fixed position, class 
+	//The colored background for some songs (since I can't do an outside stroke)
+		festival
+			.filter(function(d) { return d.artiest === "Foo Fighters" || PR.indexOf(d.nummer) > -1 || MS.indexOf(d.nummer) > -1 || interestingSongs.indexOf(d.nummer) > -1; })
+			.append("circle")
+			.attr("class", "stemmen")
+	      	.attr("r", function(d) { 
+	      		if(d.artiest === "Foo Fighters" || PR.indexOf(d.nummer) > -1 || MS.indexOf(d.nummer) > -1) {
+					return strokeWidthColored;
+				} else if(interestingSongs.indexOf(d.nummer) > -1) {
+					return strokeWidthRed;
+				} else {
+					return -1; //check for error
+				}//else
+	      	})
+		  	.style("fill", function(d) {
+			  	if(d.artiest === "Foo Fighters") {
+				  	return "#FF2E88";
+			  	} else if (interestingSongs.indexOf(d.nummer) > -1) {
+				  	return "#CB272E";
+			  	} else if (PR.indexOf(d.nummer) > -1) {
+				  	return "#f1aa11";
+			  	} else if (MS.indexOf(d.nummer) > -1) {
+				  	return "#C287FF";
+			  	} else {
+				  	return "none";
+			  	}//else
+		  	});
 
 		//draw circle for each festivalgroup
 		festival.append("circle")
@@ -147,9 +184,7 @@ if(isMobile) {
 		  	.style("fill", function(d) { 
 			  	if(d.type === "decade") {
 				  	return "none";
-			  	} else if (d.aantalStemmen === 0) {
-				  	return "#e0e0e0";
-			  	} else {
+			  	}  else {
 					return colorScale(d.aantalStemmen);
 				}//else 
 		  	});
@@ -162,10 +197,13 @@ if(isMobile) {
 		////////////////////////////// Add Tooltip ////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////
 
+
+        
+        
 		var tooltipWrapper = svg.append("g")
 		  .attr("class", "tooltip-wrapper") 
 		
-			.style("opacity", 0);
+		  .style("opacity", 0);
 
 		var tooltipBackground = tooltipWrapper.append("rect")
 			.attr("class", "tooltip-background")
@@ -200,41 +238,11 @@ if(isMobile) {
 			.attr("x",880)
 			.attr("y", 480)
 			.attr("width", 100)
-		  	.text("")
+		  	.text("");
 
 		
-			///////////////////////////////////////////////////////////////////////////
-		//////////////////////////// Add size legend //////////////////////////////
-		///////////////////////////////////////////////////////////////////////////
+			
 		
-		///////////////////////////////////////////////////////////////////////////
-		//////////////////////////// wrap text function /////////////////////////////
-		///////////////////////////////////////////////////////////////////////////
-
-		function wrap(text, width) {
-  text.each(function() {
-    let text = d3.select(this),
-      words = text.text().split(/\s+/).reverse(),
-      word,
-      line = [],
-      lineNumber = 0,
-      lineHeight = 1.1, // ems
-      x = text.attr("x"),
-      y = text.attr("y"),
-      dy = 1.1,
-      tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
-    while (word = words.pop()) {
-      line.push(word);
-      tspan.text(line.join(" "));
-      if (tspan.node().getComputedTextLength() > width) {
-        line.pop();
-        tspan.text(line.join(" "));
-        line = [word];
-        tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-      }
-    }
-  });
-}
 
 		
 	///////////////////////////////////////////////////////////////////////////
@@ -292,7 +300,10 @@ if(isMobile) {
 			.attr("y", 30)
 			.text("5");
 		
+        
 		
+
+	
 		
 	});//d3.csv
 
